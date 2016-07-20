@@ -9,8 +9,8 @@ int main(){
 	// Leo la entrada
 	int cantidad;
 	cin >> cantidad;
-	vector<int> numeros(cantidad);
-	int maximo = 0;
+	vector<long long> numeros(cantidad);
+	long long maximo = 0;
 	for (int r = 0; r < cantidad ; r++) {
 		cin >> numeros[r];
 		if (numeros[r]> maximo)
@@ -18,23 +18,22 @@ int main(){
 	}
 
 	// Calculo todos los primos hasta raiz de maximo
-    int cota = min(maximo, 10000000);
-	vector<int> listaDePrimos;
+	long long mucho = 10000000;
+    int cota = min(maximo, mucho);
+	vector<long long> listaDePrimos;
 	vector<int> arreglo(cota+1, 0);
-	arreglo[0] = 0;
-	arreglo[1] = 0;
 	for (int i = 2; i <= cota; i++) {
 		if (arreglo[i]==0) {
 			listaDePrimos.push_back(i);
-			for (int j = 2*i; j <= cota; j+=i) {
+			for (long long j = 2*i; j <= cota; j+=i) {
 				if (arreglo[j]==0)
 					arreglo[j]=i;
 			}
 		}
 	}
 	int cantidadDePrimos = listaDePrimos.size();
-    int n, n2, dividido1, dividido2, k, q, q2, w;
-    int divisorPrimo1, divisorPrimo2;
+    int n2, k, q, q2, w, z;
+    long long n, divisorPrimo1, divisorPrimo2, dividido1, dividido2;
 
     // Recorro cada una de las entradas
 	for (int r = 0; r < cantidad; r++) {
@@ -43,7 +42,6 @@ int main(){
 		if (n > cota) {
 			for (k = 0; k < cantidadDePrimos; k++) {
 				if (n%listaDePrimos[k] == 0) {
-                    cout << "el k es " << listaDePrimos[k] << endl;
                     // El primo actual lo divide
                     // divisorPrimo1 es el primer divisor
 					divisorPrimo1 = listaDePrimos[k];
@@ -55,7 +53,16 @@ int main(){
                                 // n tiene dos divisores primos
                                 dividido2 = dividido1/listaDePrimos[w];
                                 if(dividido2 > cota) {
-                                    cout << "kb" << endl;
+                                    for (z = w; z < cantidadDePrimos; z++) {
+                                        if (dividido2%listaDePrimos[z]==0){
+                                            divisorPrimo2 = listaDePrimos[z];
+                                            cout << "Vasha" << endl << divisorPrimo1*divisorPrimo2 << endl;
+                                            break;
+                                        }
+                                    }
+                                    if  (z==cantidadDePrimos){
+                                        cout << "Molek" << endl;
+                                    }
                                     break;
                                 }else {
                                     divisorPrimo2 = arreglo[dividido2];
