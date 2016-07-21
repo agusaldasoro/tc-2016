@@ -1,47 +1,29 @@
 #include <iostream>
-#include <vector>
+#include <set>
+#include <functional>
+#include <queue> 
 
 using namespace std;
 
 int main(){
-	vector<int> primos;
-	primos.push_back(2);
-	primos.push_back(3);
-	primos.push_back(5);
-	vector<int> numeros;
-	int var;
-	bool termine = false;
-	while (!termine) {
-		cin >> var;
-		if (var!=0) {
-			numeros.push_back(var);
-		}else{
-			termine = true;
-		}
-	}
-	int n, j;
-	for (int i = 0; i < numeros.size(); i++) {
-		n = numeros[i];
-		vector<bool> arr(n+1, false);
-		arr[1]=arr[2]=arr[3]=arr[5]=true;
-		for (j = 0; j < 3; j++) {
-			for (int r = 2*primos[j]; r <= n; r+=primos[j]) {
-				arr[j]=true;
-			}
-		}
-		int count=0, indice=1;
-		bool encontre;
-		while(count<n){
-			encontre = false;
-			while(!encontre){
-				indice++;
-				encontre = arr[indice];
-			}
-			count++;
-		}
-		cout << indice << endl;
-	}
-	
+    int n;
+    while(cin >> n){
+        if(n == 0) break;
+        set<unsigned long long> aSet;
+        aSet.insert(1);
+        int i = 0;
+        while(i < n-1){
+            unsigned long long min = *(aSet.begin());
+            aSet.insert(min*2);
+            aSet.insert(min*3);
+            aSet.insert(min*5);
+            aSet.erase(min);
+            ++i;
+        }
+        
+        cout << *(aSet.begin()) << endl;
 
-
+    }
+    return 0;
 }
+
