@@ -32,7 +32,7 @@ int main(){
 		}
 	}
 	int cantidadDePrimos = listaDePrimos.size();
-    int n2, k, q, q2, w, z;
+    int k, w;
     long long n, divisorPrimo1, divisorPrimo2, dividido1, dividido2;
 
     // Recorro cada una de las entradas
@@ -40,67 +40,39 @@ int main(){
 		n = numeros[r];
 		// La entrada es muy grande
 		if (n > cota) {
-			for (k = 0; k < cantidadDePrimos; k++) {
-				if (n%listaDePrimos[k] == 0) {
-                    // El primo actual lo divide
-                    // divisorPrimo1 es el primer divisor
-					divisorPrimo1 = listaDePrimos[k];
-					// Lo que queda despues de dividir
-					dividido1 = n/divisorPrimo1;
-					if (dividido1 > cota) {
-						for (w = k; w < cantidadDePrimos; w++) {
-							if (dividido1%listaDePrimos[w] == 0) {
-                                // n tiene dos divisores primos
-                                dividido2 = dividido1/listaDePrimos[w];
-                                if(dividido2 > cota) {
-                                    for (z = w; z < cantidadDePrimos; z++) {
-                                        if (dividido2%listaDePrimos[z]==0){
-                                            divisorPrimo2 = listaDePrimos[z];
-                                            cout << "Vasha" << endl << divisorPrimo1*divisorPrimo2 << endl;
-                                            break;
-                                        }
-                                    }
-                                    if  (z==cantidadDePrimos){
-                                        cout << "Molek" << endl;
-                                    }
-                                    break;
-                                }else {
-                                    divisorPrimo2 = arreglo[dividido2];
-                                    cout << divisorPrimo2 << endl;
-                                    if (divisorPrimo2 > 0) {
-                                        // Tiene tres o mas divisores primos
-                                        cout << "Vasha" << endl << divisorPrimo1*divisorPrimo2 << endl;
-                                    } else{
-                                        cout << "Molek" << endl;
-                                    }
-                                    break;
-                                }
-							}
-						}
-						if(w == cantidadDePrimos) {
-							cout << "Molek" << endl;
-						}
-						break;
-					}else {
-						divisorPrimo2 = arreglo[dividido1];
-						if (divisorPrimo2 > 0)
-							cout << "Vasha" << endl << listaDePrimos[k]*divisorPrimo2 << endl;
-						else
-							cout << "Molek" << endl;
-                        break;
-					}
-				}
+			for (k = 0; k < cantidadDePrimos; k++){
+                if(n%listaDePrimos[k] == 0){
+                    divisorPrimo1 = listaDePrimos[k];
+                    dividido1 = n / divisorPrimo1;
+                    for (w = k; w < cantidadDePrimos; w++){
+                        if (dividido1%listaDePrimos[w] == 0){
+                            divisorPrimo2 = listaDePrimos[w];
+                            dividido2 = dividido1 / divisorPrimo2;
+                            if (dividido2 > 1) {
+                                cout << "Vasha" << endl << divisorPrimo1*divisorPrimo2 << endl;
+                                break;
+                            } else {
+                                cout << "Molek" << endl;
+                                break;
+                            }
+                        }
+                    }
+                    if (w == cantidadDePrimos){
+                        cout << "Molek" << endl;
+                    }
+                    break;
+                }
 			}
-			// Ningun primo menor a raiz de si mismo lo divide, entonces es primo
-			if(k == cantidadDePrimos) {
+			if (k == cantidadDePrimos){
 				cout << "Vasha" << endl << 0 << endl;
 			}
 		}else {
-			q = arreglo[n];
-			if (q > 0) {
-				q2 = arreglo[n/q];
-				if (q2 > 0)
-					cout << "Vasha" << endl << q*q2 << endl;
+			divisorPrimo1 = arreglo[n];
+			if (divisorPrimo1 > 0) {
+				divisorPrimo2 = arreglo[n/divisorPrimo1];
+				// Tiene 3 divisores
+				if (divisorPrimo2 > 0)
+					cout << "Vasha" << endl << divisorPrimo1*divisorPrimo2 << endl;
 				else
 					cout << "Molek" << endl;
 			}else
