@@ -1,72 +1,88 @@
-#include <vector>
-#include <iostream>
+#include <bits/stdc++.h>
 
 using namespace std;
 
-void copyVector(vector<int> &v1, vector<int> &v2, int i){
-	for(unsigned int iter = 0; iter < v2.size(); iter++){
-		v2[iter] = v1[iter+i];
-	}
+class SegmentTree{
+	public:
+		SegmentTree(){}
+		void init(vector<int> &keys) {
+			unsigned int t = 1;
+			INF = 2000000;
+			while(t < keys.size()*2) t*=2;
+			v.resize(t);
+			for(unsigned int i = 0; i < t; i++){
+				v[i] = INF;
+			}
+			for(unsigned int i=0;i<keys.size();i++) {
+				v[i+t/2] = keys[i];
+			}
+			for(unsigned int i=t-1;i>=1;i--) {
+				v[i/2] = min(v[i/2],v[i]);
+			}
+		}
+		int query(int primero, int ultimo) {
+			return _query(1,0,v.size()/2,primero,ultimo);
+		}
+	private:
+		int INF;
+		vector<int> v;
+		int _query(int nodo, int left, int right, int primero, int ultimo) {
+			// calcular el minimo numero en [primero,ultimo) y estamos viendo [left,right)
+			// si [left,right) esta incluido en [primero,ultimo) entonces nos sirve todo
+			if(primero <= left && ultimo >= right)
+				return v[nodo];
+			if(ultimo <= left || primero >= right)
+				return INF;
+			return min(_query(nodo*2,left,(left+right)/2,primero,ultimo),
+					   _query(nodo*2+1,(left+right)/2,right,primero,ultimo));
+		}
+};
+
+map<int, int> lastIndexOf;
+vector<int> keys, valorcitos;
+
+int hayRepetido(SegmentTree &s, int a, int b) {
+	int r = s.query(a,b);
+	if(r < b)
+		return r;
+	else
+		return -1;
 }
 
-int searchCabeza(vector<int> &v){
-	for(unsigned int i = 0; i < v.size()-1; i++){
-		int n = v[i];
-		for(unsigned int j = i+1; j < v.size(); j++){
-			if(n == v[j]) return n;
-		}
-	}
-	return -1;
-}
-
-int repeated(vector<int> &v){
-	if(v.size() <= 1) return -1;
-	else{
-		int half = v.size()/2;
-		vector<int> left(half);
-		copyVector(v, left, 0);
-		int res = repeated(left);
-		if(res >= 0){
-			return res;
-		}
-		else{
-			vector<int> right(v.size()-half);
-			copyVector(v, right, v.size()-half-1);
-			res = repeated(right);
-			if(res >= 0) return res;
-			else
-				return searchCabeza(v);
-		}
-	}
-}
+SegmentTree s;
 
 int main(){
-	int msgAmount;
-	int queriesAmount;
-	while(cin >> msgAmount >> queriesAmount){
-		if(msgAmount == 0 && queriesAmount == 0) break;
-		vector<int> messages(msgAmount,0);
-		for(int m = 0; m < msgAmount; m++){
-			int msg;
-			cin >> msg;
-			messages[m] = msg;
+	int messages;
+	int queries;
+	int key;
+	while(cin >> messages >> queries && messages != 0) {
+		lastIndexOf.clear();
+		keys.resize(messages);
+		valorcitos.resize(messages);
+		for(int i = 0; i < messages; i++) {
+			cin >> key;
+			valorcitos[i] = key;
+			if(lastIndexOf.find(key) == lastIndexOf.end()) {
+				lastIndexOf[key] = i;
+			}
+			else{
+				keys[lastIndexOf[key]] = i;
+				lastIndexOf[key] = i;
+			}
+			keys[i] = messages+1;
 		}
-		for(int q = 0; q < queriesAmount; q++){
-			int i, j, result;
-			cin >> i;
-			cin >> j;
-			vector<int> range(j-i+1, -1);
-			copyVector(messages, range, i-1);
-			result = repeated(range);
-			if(result >= 0){
-				cout << result << endl;
-			}
-			else {
+		lastIndexOf.clear();
+		s.init(keys);
+		for(int q=0;q<queries;q++) {
+			int a,b;
+			cin >> a >> b;
+			a--;
+			int miRepetido = hayRepetido (s,a,b);
+			if(miRepetido == -1)
 				cout << "OK" << endl;
-			}
-			
+			else
+				cout << valorcitos[miRepetido]<< endl;
 		}
 		cout << endl;
 	}
-	
 }
