@@ -9,7 +9,6 @@ vector<int> criba;
 int main(){
 	int number;
 	int maximum = 6;
-	int caca = 0;
 	while(cin >> number){
 		if(number == 0) break;
 		numbers.push_back(number);
