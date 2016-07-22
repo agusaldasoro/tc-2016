@@ -2,17 +2,21 @@
 
 using namespace std;
 
-int calculateMovements(string position, string required){
+int digit(int number, int pos){
+	return (int) ((number % (int) pow(10,pos+1)) / (pow(10,pos)));
+}
+
+int calculateMovements(int number, int prime){
+	int digits = 0;
+	int maximum = max(number, prime);
 	int movements = 0;
-	cout << position << endl;
-	cout << required << endl;
-	for(int i = required.size()-1; i >= 0; i--){
-		if(position.size() < i){
-			movements += required[i] + '0';
-		}
-		else{
-			movements += abs(required[i] - position[i]);
-		}
+	while(maximum > 0){
+		maximum = maximum/10;
+		digits++;
+	}
+	cout << digits << endl;
+	for(int i = 0; i < digits; i++){
+		movements = abs(digit(number,i) - digit(prime,i));
 	}
 	return movements;
 }
@@ -27,18 +31,14 @@ int main(){
 		int dasize = pow(10,digits);
 		vector<int> arreglo(dasize, 0);
 		int number = atoi(position.c_str());
-		int prime = -1;
-		for (int i = 2; i <= dasize; i++) {
+		int prime = 0;
+		for (int i = 3; i <= dasize; i+=2) {
 			if (arreglo[i]==0) {
-				if(prime == -1) prime = i; 
-				else if(abs(prime-number) <= abs(i-number)) break;
-				for(int j = 2*i; j <= dasize; j+=i) arreglo[j]++;
+				if(abs(prime-number) <= abs(i-number)) break;
+				for(int j = 3*i; j <= dasize; j+=i) arreglo[j]++;
+				prime = i;
 			}
 		}
-		stringstream aStream;
-		aStream << prime;	
-		string required;
-		aStream >> required;
-		cout << calculateMovements(position, required) << endl;
+		cout << calculateMovements(number, prime) << endl;
 	}
 }
