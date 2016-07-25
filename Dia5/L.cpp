@@ -5,34 +5,33 @@
 using namespace std;
 
 int main(){
-
+	ios::sync_with_stdio(false);
+	cin.tie(NULL);
 	// Leo la entrada
 	int cantidad;
 	cin >> cantidad;
-	cantidad++;
 	vector<int> numeros(cantidad);
-	vector<set<int> > parciales(cantidad+1);
-	set<int> conj;
-	conj.insert(0);
-	for (int r = 1; r < cantidad ; r++)
+	for (int r = 0; r < cantidad ; r++)
 		cin >> numeros[r];
 
-    // Resuelvo
-    int ultimo = cantidad;
-    bool cambio;
-    for (int i = 0; i < cantidad-1; cantidad++){
-        cambio = false;
-        for (auto elem: parciales[ultimo]) {
-            if(numeros[cantidad-1-i]==i-elem){
-                parciales[cantidad-1-i].insert(elem);
-                if  (!cambio) {
-                    cambio = true;
-                    ultimo = cantidad-1-i;
-                }
+	set<int> solucion;
+	solucion.insert(cantidad);
+	vector<bool> acumulados(cantidad,false);
+
+    for (int i = cantidad-1; i >= 0; i--){
+        // Si el numero cuenta lo que le falta hasta el final
+        if (numeros[i] == cantidad-i-1){
+            acumulados[i] = true;
+            solucion.insert(i);
+        } else{
+			if (i+numeros[i]+1 < cantidad && acumulados[i+numeros[i]+1]) {
+				acumulados[i] = true;
+				solucion.insert(i);
             }
         }
     }
-    for (auto elem: parciales[0]) {
-        cout << elem << endl;
+
+    for (auto elem: solucion){
+        cout << elem << "\n";
     }
 }
